@@ -3,20 +3,23 @@ import { logger } from '../utils/logger.utils';
 
 export const post = async (request: Request, response: Response) => {
     try {
-        
+        logger.info('Event message received.');
+
         const pubSubOrg = request.body;
-        logger.info('✅ Pub/Sub message received.', pubSubOrg);
+        logger.info('Request Body:', pubSubOrg);
 
         const pubSubMessage = request.body.message;
-        logger.info('✅ Pub/Sub message received.', pubSubMessage);
+        logger.info('Body Message:', pubSubMessage);
 
         const decodedData = pubSubMessage.data
             ? Buffer.from(pubSubMessage.data, 'base64').toString().trim()
             : undefined;
 
+        logger.info('Decoded data:', decodedData);
         if (!decodedData) {
             logger.error('❌ No data found in Pub/Sub message.');
-            return response.status(400).send();
+            logger.error('ACK invalid message.');
+            return response.status(200).send();
         }
 
         const jsonData = JSON.parse(decodedData);
