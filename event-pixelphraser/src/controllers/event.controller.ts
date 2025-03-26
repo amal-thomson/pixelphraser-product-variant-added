@@ -9,37 +9,38 @@ export const post = async (request: Request, response: Response) => {
         logger.info('Request Body:', pubSubOrg);
 
         const pubSubMessage = request.body.message;
-        logger.info('Body Message:', pubSubMessage);
+        logger.info('Message Body:', pubSubMessage);
 
         const decodedData = pubSubMessage.data
             ? Buffer.from(pubSubMessage.data, 'base64').toString().trim()
             : undefined;
 
-        logger.info('Decoded data:', decodedData);
+        // logger.info(`Decoded data:' ${decodedData}`);
         if (!decodedData) {
-            logger.error('❌ No data found in Pub/Sub message.');
+            logger.error('No data found in Pub/Sub message.');
             logger.error('ACK invalid message.');
             return response.status(200).send();
         }
 
         const jsonData = JSON.parse(decodedData);
-        logger.info('✅ Parsed JSON data from Pub/Sub message.', jsonData);
+        // logger.info('Parsed JSON data from Pub/Sub message.', jsonData);
 
         if (jsonData.resource?.typeId === 'product') {
-            logger.info('✅ Event message received.');
-            logger.info('✅ Processing event message.');
+            logger.info('Processing event message.');
         }
+
+        const eventTrigger = jsonData.type;
+        logger.info(`Event trigger: ${eventTrigger}`);
+
+        response.status(200).send();
+        return;
+
     } catch (error) {
         if (error instanceof Error) {
-            logger.error('❌ Error processing request', { error: error.message });
-            return response.status(500).send({
-                error: '❌ Internal server error. Failed to process request.',
-                details: error.message,
-            });
+            logger.error('Error processing request', { error: error.message });
+            return response.status(500).send();
         }
-        logger.error('❌ Unexpected error', { error });
-        return response.status(500).send({
-            error: '❌ Unexpected error occurred.',
-        });
+        logger.error('Unexpected error', { error });
+        return response.status(500).send();
     }
 };
