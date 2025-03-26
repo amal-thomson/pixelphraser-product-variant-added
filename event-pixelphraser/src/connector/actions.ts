@@ -2,7 +2,6 @@ import { Destination, GoogleCloudPubSubDestination } from '@commercetools/platfo
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 
 const PRODUCT_SUBSCRIPTION_KEY = 'productCreatedSubscription';
-const CTP_EVENT_TRIGGER_NAME = process.env.CTP_EVENT_TRIGGER_NAME || 'ProductCreated';
 
 export async function createGcpPubSubProductSubscription(
   apiRoot: ByProjectKeyRequestBuilder,
@@ -21,6 +20,8 @@ async function createSubscription(
   apiRoot: ByProjectKeyRequestBuilder,
   destination: Destination
 ) {
+  const eventType = process.env.CTP_EVENT_TRIGGER_NAME || 'ProductCreated';
+
   await deleteProductSubscription(apiRoot);
   await apiRoot
     .subscriptions()
@@ -31,7 +32,7 @@ async function createSubscription(
         messages: [
           {
             resourceTypeId: 'product',
-            types: [CTP_EVENT_TRIGGER_NAME],
+            types: [eventType],
           },
         ],
       },
