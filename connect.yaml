@@ -33,3 +33,6 @@ deployAs:
         - key: GEMINI_MODEL
           description: GEMINI_MODEL version
           required: true
+        - key: CTP_EVENT_TRIGGER_NAME
+          description: CTP_EVENT_TRIGGER_NAME
+          required: true
