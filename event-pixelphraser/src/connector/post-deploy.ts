@@ -4,7 +4,6 @@ dotenv.config();
 import { createApiRoot } from '../client/create.client';
 import { assertError, assertString } from '../utils/assert.utils';
 import { createGcpPubSubProductSubscription} from './actions';
-import { logger } from '../utils/logger.utils';
 
 const CONNECT_GCP_TOPIC_NAME_KEY = 'CONNECT_GCP_TOPIC_NAME';
 const CONNECT_GCP_PROJECT_ID_KEY = 'CONNECT_GCP_PROJECT_ID';
